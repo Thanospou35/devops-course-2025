@@ -92,7 +92,7 @@ function App() {
           <h1 className="text-4xl font-bold text-gray-800 mb-2">
             📝 Todo List
           </h1>
-          <h2>Mohamed im full stack developer</h2>
+          {/* <h2>Mohamed im full stack developer</h2> */}
           <p className="text-gray-600">Gérez vos tâches facilement</p>
         </div>
 
