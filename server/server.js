@@ -1,9 +1,15 @@
 import express from 'express';
 import cors from 'cors';
 import todoRoutes from './routes/todoRoutes.js';
+import connectDB from './config/db.js';
+import dotenv from 'dotenv';
+dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+
+// Connexion à MongoDB
+connectDB();
 
 // Middleware
 app.use(cors());
@@ -20,6 +26,6 @@ app.get('/', (req, res) => {
 
 // Démarrage du serveur
 app.listen(PORT, () => {
-  console.log(`🚀 Canged to - Serveur démarré sur le port ${PORT}`);
+  console.log(`🚀 Serveur démarré sur le port ${PORT}`);
   console.log(`📍 API disponible sur http://localhost:${PORT}/api/todos`);
 });

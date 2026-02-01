@@ -1,14 +1,14 @@
-import { useState, useEffect } from 'react';
-import axios from 'axios';
-import './index.css';
+import { useState, useEffect } from "react";
+import axios from "axios";
+import "./index.css";
 
-const API_URL = 'http://localhost:5000/api/todos';
+const API_URL = import.meta.env.VITE_API_URL;
 
 function App() {
   const [todos, setTodos] = useState([]);
-  const [inputText, setInputText] = useState('');
+  const [inputText, setInputText] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   // Charger tous les todos au démarrage
   useEffect(() => {
@@ -22,10 +22,10 @@ function App() {
       const response = await axios.get(API_URL);
       if (response.data.success) {
         setTodos(response.data.data);
-        setError('');
+        setError("");
       }
     } catch (err) {
-      setError('Erreur lors du chargement des todos');
+      setError("Erreur lors du chargement des todos");
       console.error(err);
     } finally {
       setLoading(false);
@@ -42,11 +42,11 @@ function App() {
       const response = await axios.post(API_URL, { text: inputText });
       if (response.data.success) {
         setTodos([...todos, response.data.data]);
-        setInputText('');
-        setError('');
+        setInputText("");
+        setError("");
       }
     } catch (err) {
-      setError('Erreur lors de la création du todo');
+      setError("Erreur lors de la création du todo");
       console.error(err);
     } finally {
       setLoading(false);
@@ -56,16 +56,16 @@ function App() {
   // Toggle complété/non complété
   const toggleTodo = async (id) => {
     try {
-      const todo = todos.find(t => t.id === id);
+      const todo = todos.find((t) => t._id === id);
       const response = await axios.put(`${API_URL}/${id}`, {
-        completed: !todo.completed
+        completed: !todo.completed,
       });
       if (response.data.success) {
-        setTodos(todos.map(t => t.id === id ? response.data.data : t));
-        setError('');
+        setTodos(todos.map((t) => (t._id === id ? response.data.data : t)));
+        setError("");
       }
     } catch (err) {
-      setError('Erreur lors de la mise à jour du todo');
+      setError("Erreur lors de la mise à jour du todo");
       console.error(err);
     }
   };
@@ -75,14 +75,16 @@ function App() {
     try {
       const response = await axios.delete(`${API_URL}/${id}`);
       if (response.data.success) {
-        setTodos(todos.filter(t => t.id !== id));
-        setError('');
+        setTodos(todos.filter((t) => t._id !== id));
+        setError("");
       }
     } catch (err) {
-      setError('Erreur lors de la suppression du todo');
+      setError("Erreur lors de la suppression du todo");
       console.error(err);
     }
   };
+
+  // let moha = "unused variable here";
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8 px-4">
@@ -126,9 +128,7 @@ function App() {
         {/* Liste des todos */}
         <div className="bg-white rounded-lg shadow-lg overflow-hidden">
           {loading && todos.length === 0 ? (
-            <div className="p-8 text-center text-gray-500">
-              Chargement...
-            </div>
+            <div className="p-8 text-center text-gray-500">Chargement...</div>
           ) : todos.length === 0 ? (
             <div className="p-8 text-center text-gray-500">
               Aucune tâche pour le moment. Ajoutez-en une !
@@ -137,27 +137,27 @@ function App() {
             <ul className="divide-y divide-gray-200">
               {todos.map((todo) => (
                 <li
-                  key={todo.id}
+                  key={todo._id}
                   className="p-4 hover:bg-gray-50 transition-colors"
                 >
                   <div className="flex items-center gap-3">
                     <input
                       type="checkbox"
                       checked={todo.completed}
-                      onChange={() => toggleTodo(todo.id)}
+                      onChange={() => toggleTodo(todo._id)}
                       className="w-5 h-5 text-indigo-600 rounded focus:ring-indigo-500 cursor-pointer"
                     />
                     <span
                       className={`flex-1 ${
                         todo.completed
-                          ? 'line-through text-gray-500'
-                          : 'text-gray-800'
+                          ? "line-through text-gray-500"
+                          : "text-gray-800"
                       }`}
                     >
                       {todo.text}
                     </span>
                     <button
-                      onClick={() => deleteTodo(todo.id)}
+                      onClick={() => deleteTodo(todo._id)}
                       className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition-colors text-sm font-medium"
                     >
                       Supprimer
@@ -173,7 +173,7 @@ function App() {
         {todos.length > 0 && (
           <div className="mt-4 text-center text-gray-600">
             <p>
-              {todos.filter(t => t.completed).length} / {todos.length} tâches
+              {todos.filter((t) => t.completed).length} / {todos.length} tâches
               complétées
             </p>
           </div>
